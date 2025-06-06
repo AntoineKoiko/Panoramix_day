@@ -25,6 +25,16 @@ Steps to install the extension:
 
 See Google Chrome tutorial [here](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked)
 
+## Usage
+
+The extension need to be authtified as an Epitech user, to do it you have to sign in to one of the Epitech applications like as an Epitech student / staff:
+- [Gandalf](https://gandalf.epitech.eu/login/index.php)
+- [Panoramix](https://panoramix.epitest.eu)
+- [Intranet]https://intra.epitech.eu/
+- An office 365 application with your `firstname.lastname@epitech.eu` account
+
+Then you can clikc on the extension icon to open the popup and see your activities !
+
 ## 📝 Contributing
 
 If you would like to contribute to the development of this extension or report issues, please open an issue on the GitHub repository or create a pull request.
