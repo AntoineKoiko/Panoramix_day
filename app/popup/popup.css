@@ -1,0 +1,35 @@
+body {
+    background-color: #1a202c;
+    color: white;
+    min-width: 450px;
+    padding: 5px 0;
+}
+
+
+/* Table */
+
+.wraper {
+    width: 100%;
+}
+
+.wraper table {
+    border: 1px solid #dededf;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 1px;
+    text-align: center;
+}
+
+.wraper th {
+    border: 1px solid #dededf;
+    background-color: #2d3748;
+    color: #dededf;
+    padding: 5px;
+}
+
+.wraper td {
+    border: 1px solid #dededf;
+    background-color: #2d3748;
+    color: #dededf;
+    padding: 5px;
+}

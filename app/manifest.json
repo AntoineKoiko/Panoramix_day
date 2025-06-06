@@ -1,0 +1,16 @@
+{
+    "name": "Panoramix Day",
+    "description": "Get all your activities of the day",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "./popup/popup.html",
+        "default_icon": "./images/panoramix_icon.png"
+    },
+    "host_permissions": [
+        "https://panoramix.epitest.eu/*"
+    ],
+    "background": {
+        "service_worker": "./scripts/background.js"
+    }
+}
