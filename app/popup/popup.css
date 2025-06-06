@@ -1,35 +1,114 @@
 body {
-    background-color: #1a202c;
-    color: white;
-    min-width: 450px;
-    padding: 5px 0;
+  background-color: #1a202c;
+  color: white;
+  min-width: 350px;
+  padding: 16px;
+  font-family: Arial, sans-serif;
 }
 
-
-/* Table */
-
-.wraper {
-    width: 100%;
+h2 {
+  text-align: center;
+  margin-bottom: 16px;
 }
 
-.wraper table {
-    border: 1px solid #dededf;
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 1px;
-    text-align: center;
+.wrapper {
+  width: 100%;
 }
 
-.wraper th {
-    border: 1px solid #dededf;
-    background-color: #2d3748;
-    color: #dededf;
-    padding: 5px;
+#loading-indicator {
+  text-align: center;
 }
 
-.wraper td {
-    border: 1px solid #dededf;
-    background-color: #2d3748;
-    color: #dededf;
-    padding: 5px;
+.event-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px; /* Espacement entre les cards */
+  padding-bottom: 16px;
+}
+
+.event-card {
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border-left: 5px solid transparent;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.event-card.inscrit {
+  background-color: #38a16933;
+  border-left-color: #2f855a;
+}
+
+.event-card.pas-inscrit {
+  background-color: #e53e3e33;
+  border-left-color: #c53030;
+}
+
+.event-card.en-cours {
+  background-color: #3182ce33;
+  border-left-color: #2b6cb0;
+}
+
+.event-card .title {
+  font-weight: bold;
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+  color: #edf2f7;
+}
+
+.event-card .time-until {
+  font-size: 0.85rem;
+  color: #cbd5e0;
+  margin-bottom: 6px;
+}
+
+.event-card .info-row {
+  display: flex;
+  font-size: 0.9rem;
+  color: #e2e8f0;
+  margin-bottom: 4px;
+  gap: 6px;
+  align-items: center;
+}
+
+.event-card .status {
+  margin-top: 4px;
+  font-style: italic;
+  font-size: 0.75rem;
+  text-align: center;
+  color: white;
+  font-weight: normal;
+  text-decoration: none;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: background-color 0.2s;
+}
+
+.event-card .status:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.more-button {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.more-button a {
+  display: inline-block;
+  background-color: #1a365d; /* Bleu moins clair */
+  color: white;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+}
+
+.more-button a:hover {
+  background-color: #2a4365; /* Survol plus doux */
 }
