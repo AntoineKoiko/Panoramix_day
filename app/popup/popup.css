@@ -6,6 +6,10 @@ body {
   font-family: Arial, sans-serif;
 }
 
+a {
+  cursor: pointer;
+}
+
 h2 {
   text-align: center;
   margin-bottom: 16px;
@@ -22,7 +26,8 @@ h2 {
 .event-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px; /* Espacement entre les cards */
+  gap: 20px;
+  /* Espacement entre les cards */
   padding-bottom: 16px;
 }
 
@@ -100,7 +105,8 @@ h2 {
 
 .more-button a {
   display: inline-block;
-  background-color: #1a365d; /* Bleu moins clair */
+  background-color: #1a365d;
+  /* Bleu moins clair */
   color: white;
   text-decoration: none;
   padding: 8px 14px;
@@ -110,5 +116,6 @@ h2 {
 }
 
 .more-button a:hover {
-  background-color: #2a4365; /* Survol plus doux */
+  background-color: #2a4365;
+  /* Survol plus doux */
 }
