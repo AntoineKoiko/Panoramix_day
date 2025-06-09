@@ -118,7 +118,6 @@ const buildEventDetailUrl = (event) => {
     weekStart.setUTCDate(eventStart.getUTCDate() - eventStart.getUTCDay()); // dimanche
     weekStart.setUTCHours(22, 0, 0, 0); // 22:00:00.000Z
 
-    x // Fin semaine : dimanche suivant 21:59:59.999 UTC
     const weekEnd = new Date(weekStart);
     weekEnd.setUTCDate(weekEnd.getUTCDate() + 7);
     weekEnd.setUTCHours(21, 59, 59, 999);
