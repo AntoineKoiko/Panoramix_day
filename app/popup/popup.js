@@ -140,18 +140,6 @@ const displayEvents = (events) => {
         noEventsItem.textContent = "No events for today.";
         noEventsItem.style.textAlign = "center";
         eventGrid.appendChild(noEventsItem);
-        // Bouton même si pas d'événement
-        const moreBtnContainer = document.createElement("div");
-        moreBtnContainer.className = "more-button";
-
-        const moreBtn = document.createElement("a");
-        moreBtn.href = "https://panoramix.epitest.eu/calendar";
-        moreBtn.target = "_blank";
-        moreBtn.rel = "noopener noreferrer";
-        moreBtn.textContent = "Voir plus sur Panoramix";
-
-        moreBtnContainer.appendChild(moreBtn);
-        eventGrid.appendChild(moreBtnContainer);
     } else {
         const formatEvents = events.map(getEventData);
         const eventsOfTheDay = filterEventOftheDay(formatEvents);
@@ -211,23 +199,22 @@ const displayEvents = (events) => {
             card.appendChild(statusLink);
 
             eventGrid.appendChild(card);
-            eventGrid.style.display = "block"
         });
-
-        // Bouton "Voir plus sur Panoramix"
-        const moreBtnContainer = document.createElement("div");
-        moreBtnContainer.className = "more-button";
-
-        const moreBtn = document.createElement("a");
-        moreBtn.href = "https://panoramix.epitest.eu/calendar";
-        moreBtn.target = "_blank";
-        moreBtn.rel = "noopener noreferrer";
-        moreBtn.textContent = "Voir plus sur Panoramix";
-
-        moreBtnContainer.appendChild(moreBtn);
-        eventGrid.appendChild(moreBtnContainer);
-
     }
+    eventGrid.style.display = "block"
+
+    // Bouton "Voir plus sur Panoramix"
+    const moreBtnContainer = document.createElement("div");
+    moreBtnContainer.className = "more-button";
+
+    const moreBtn = document.createElement("a");
+    moreBtn.href = "https://panoramix.epitest.eu/calendar";
+    moreBtn.target = "_blank";
+    moreBtn.rel = "noopener noreferrer";
+    moreBtn.textContent = "Aller sur Panoramix";
+
+    moreBtnContainer.appendChild(moreBtn);
+    eventGrid.appendChild(moreBtnContainer);
 };
 
 const main = async () => {
