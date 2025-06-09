@@ -76,9 +76,6 @@ const filterEventOftheDay = (events) => {
 
     return events.filter(event => {
         const eventStart = new Date(event.start);
-        console.log("eventStart", eventStart);
-        console.log("startOfDay", startOfDay);
-        console.log("endOfDay", endOfDay);
         return eventStart >= startOfDay && eventStart < endOfDay;
     });
 }
@@ -117,12 +114,11 @@ const buildEventDetailUrl = (event) => {
     const eventId = event._id;
     const eventStart = new Date(event.start);
 
-    // Début semaine : dimanche 22h UTC avant la date de l'event
     const weekStart = new Date(eventStart);
     weekStart.setUTCDate(eventStart.getUTCDate() - eventStart.getUTCDay()); // dimanche
     weekStart.setUTCHours(22, 0, 0, 0); // 22:00:00.000Z
 
-    // Fin semaine : dimanche suivant 21:59:59.999 UTC
+    x // Fin semaine : dimanche suivant 21:59:59.999 UTC
     const weekEnd = new Date(weekStart);
     weekEnd.setUTCDate(weekEnd.getUTCDate() + 7);
     weekEnd.setUTCHours(21, 59, 59, 999);
@@ -155,20 +151,17 @@ const displayEvents = (events) => {
             const start = formatDate(event.start);
             const end = formatDate(event.end);
 
-            // Création de la card
             const card = document.createElement("div");
             card.className = `event-card ${event.isRegistered ? "inscrit" : "pas-inscrit"}`;
             if (isOngoing) {
                 card.classList.add("en-cours");
             }
 
-            // Titre
             const title = document.createElement("div");
             title.className = "title";
             title.textContent = event.title;
             card.appendChild(title);
 
-            // Délai avant ou après début
             const timeInfo = document.createElement("div");
             timeInfo.className = "time-until";
             if (isOngoing) {
@@ -178,19 +171,16 @@ const displayEvents = (events) => {
             }
             card.appendChild(timeInfo);
 
-            // 🕒 Horaires
             const timeRow = document.createElement("div");
             timeRow.className = "info-row";
             timeRow.textContent = `🕒 ${start} - ${end}`;
             card.appendChild(timeRow);
 
-            // 🏠 Salle
             const roomRow = document.createElement("div");
             roomRow.className = "info-row";
             roomRow.textContent = `🏠 ${event.roomName || "No room"}`;
             card.appendChild(roomRow);
 
-            // Bouton de statut cliquable
             const statusLink = document.createElement("a");
             statusLink.className = "status";
             statusLink.href = buildEventDetailUrl(event);
@@ -204,18 +194,17 @@ const displayEvents = (events) => {
     }
     eventGrid.style.display = "block"
 
-    // Bouton "Voir plus sur Panoramix"
-    const moreBtnContainer = document.createElement("div");
-    moreBtnContainer.className = "more-button";
+    const gotoPanoBtnContainer = document.createElement("div");
+    gotoPanoBtnContainer.className = "more-button";
 
-    const moreBtn = document.createElement("a");
-    moreBtn.href = "https://panoramix.epitest.eu/calendar";
-    moreBtn.target = "_blank";
-    moreBtn.rel = "noopener noreferrer";
-    moreBtn.textContent = "Aller sur Panoramix";
+    const goToPanoBtn = document.createElement("a");
+    goToPanoBtn.href = "https://panoramix.epitest.eu/calendar";
+    goToPanoBtn.target = "_blank";
+    goToPanoBtn.rel = "noopener noreferrer";
+    goToPanoBtn.textContent = "Aller sur Panoramix";
 
-    moreBtnContainer.appendChild(moreBtn);
-    eventGrid.appendChild(moreBtnContainer);
+    gotoPanoBtnContainer.appendChild(goToPanoBtn);
+    eventGrid.appendChild(gotoPanoBtnContainer);
 };
 
 const main = async () => {
