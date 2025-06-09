@@ -33,7 +33,7 @@ The extension need to be authtified as an Epitech user, to do it you have to sig
 - [Intranet](https://intra.epitech.eu/)
 - An office 365 application with your `firstname.lastname@epitech.eu` account
 
-Then you can clikc on the extension icon to open the popup and see your activities !
+Then you can click on the extension icon to open the popup and see your activities !
 
 ## 📝 Contributing
 
