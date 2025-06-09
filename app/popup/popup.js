@@ -1,15 +1,8 @@
-const getEvents = async () => {
+const authtentifyAndGetEvents = async () => {
     try {
         chrome.runtime.sendMessage({ type: "getToken" }, async (response) => {
             const authToken = response.jwt;
-            const events = await fethcEvents(authToken);
-            loadingIndicator.style.display = "none";
-
-            if (!events || events.length === 0) {
-                displayEvents([]);
-                return;
-            }
-            displayEvents(events);
+            await subMain(authToken)
         });
     } catch (error) {
         throw new Error("Failed to fetch data");
@@ -40,6 +33,7 @@ const getEndFetchString = () => {
     return end;
 }
 
+// retun a list of events or throw an error if the request fails
 const fethcEvents = async (token) => {
     const start = getStartFetchSting();
     const end = getEndFetchString();
@@ -57,6 +51,8 @@ const fethcEvents = async (token) => {
     const data = await res.json();
     return data;
 }
+
+// Events formatting
 
 const getEventData = (event) => {
     return {
@@ -206,13 +202,27 @@ const displayEvents = (events) => {
     eventGrid.appendChild(gotoPanoBtnContainer);
 };
 
+const subMain = async (token) => {
+    const events = await fethcEvents(token);
+
+    if (!events || events.length === 0) {
+        displayEvents([]);
+        return;
+    }
+    displayEvents(events);
+}
+
 const main = async () => {
+    loadingIndicator.style.display = "block";
+    eventGrid.style.display = "none";
+
+
     try {
-        loadingIndicator.style.display = "block";
-        eventGrid.style.display = "none";
-        await getEvents();
+        await authtentifyAndGetEvents();
     } catch (error) {
         console.error("Error fetching data");
+    } finally {
+        loadingIndicator.style.display = "none";
     }
 }
 
