@@ -76,9 +76,6 @@ const filterEventOftheDay = (events) => {
 
     return events.filter(event => {
         const eventStart = new Date(event.start);
-        console.log("eventStart", eventStart);
-        console.log("startOfDay", startOfDay);
-        console.log("endOfDay", endOfDay);
         return eventStart >= startOfDay && eventStart < endOfDay;
     });
 }
@@ -89,7 +86,7 @@ const sortEventsByStart = (events) => {
 
 // HTML Element
 
-const eventTable = document.getElementById("event-table");
+const eventGrid = document.getElementById("event-grid");
 const loadingIndicator = document.getElementById("loading-indicator");
 
 const formatDate = (dataStr) => {
@@ -97,57 +94,123 @@ const formatDate = (dataStr) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
+const getTimeDistanceLabel = (targetDate, now) => {
+    const diffMs = targetDate - now;
+    const isFuture = diffMs > 0;
+    const absMs = Math.abs(diffMs);
+
+    const totalMinutes = Math.round(absMs / 60000);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    const label = hours > 0
+        ? `${hours}h${minutes > 0 ? ` et ${minutes} minute${minutes > 1 ? "s" : ""}` : ""}`
+        : `${minutes} minute${minutes !== 1 ? "s" : ""}`;
+
+    return isFuture ? `Dans ${label}` : `Il y a ${label}`;
+};
+
+const buildEventDetailUrl = (event) => {
+    const eventId = event._id;
+    const eventStart = new Date(event.start);
+
+    const weekStart = new Date(eventStart);
+    weekStart.setUTCDate(eventStart.getUTCDate() - eventStart.getUTCDay()); // dimanche
+    weekStart.setUTCHours(22, 0, 0, 0); // 22:00:00.000Z
+
+    x // Fin semaine : dimanche suivant 21:59:59.999 UTC
+    const weekEnd = new Date(weekStart);
+    weekEnd.setUTCDate(weekEnd.getUTCDate() + 7);
+    weekEnd.setUTCHours(21, 59, 59, 999);
+
+    const startISO = encodeURIComponent(weekStart.toISOString());
+    const endISO = encodeURIComponent(weekEnd.toISOString());
+
+    return `https://panoramix.epitest.eu/calendar/events/${eventId}/details?view=timeGridWeek&start=${startISO}&end=${endISO}&visible=true`;
+};
+
 const displayEvents = (events) => {
-    if (events.length === 0) {
-        const noEventsItem = document.createElement("li");
-        noEventsItem.textContent = "No events for today.";
-        eventTable.appendChild(noEventsItem);
+    const formatEvents = events.map(getEventData);
+    const eventsOfTheDay = filterEventOftheDay(formatEvents);
+    const sortedEvents = sortEventsByStart(eventsOfTheDay);
+
+    eventGrid.innerHTML = "";
+    if (sortedEvents.length === 0) {
+        const noEventsItem = document.createElement("p");
+        noEventsItem.textContent = "Pas d'événements pour aujourd'hui";
+        noEventsItem.style.textAlign = "center";
+        eventGrid.appendChild(noEventsItem);
     } else {
-        eventTable.style.display = "block";
-        const formatEvents = events.map(getEventData);
-        const eventsOfTheDay = filterEventOftheDay(formatEvents);
-        const sortedEvents = sortEventsByStart(eventsOfTheDay);
 
         sortedEvents.forEach(event => {
-            const timestampStrat = formatDate(event.start);
-            const timestampEnd = formatDate(event.end);
+            const now = new Date();
+            const startDate = new Date(event.start);
+            const endDate = new Date(event.end);
 
-            const eventLine = document.createElement("tr");
+            const isOngoing = now >= startDate && now <= endDate;
+            const start = formatDate(event.start);
+            const end = formatDate(event.end);
 
-            const nameCell = document.createElement("td");
-            nameCell.textContent = event.title;
-            nameCell.headers = "th-name";
+            const card = document.createElement("div");
+            card.className = `event-card ${event.isRegistered ? "inscrit" : "pas-inscrit"}`;
+            if (isOngoing) {
+                card.classList.add("en-cours");
+            }
 
-            const startCell = document.createElement("td");
-            startCell.textContent = timestampStrat;
-            startCell.headers = "th-start";
+            const title = document.createElement("div");
+            title.className = "title";
+            title.textContent = event.title;
+            card.appendChild(title);
 
-            const endCell = document.createElement("td");
-            endCell.textContent = timestampEnd;
-            endCell.headers = "th-end";
+            const timeInfo = document.createElement("div");
+            timeInfo.className = "time-until";
+            if (isOngoing) {
+                timeInfo.textContent = "En cours";
+            } else {
+                timeInfo.textContent = getTimeDistanceLabel(startDate, now);
+            }
+            card.appendChild(timeInfo);
 
-            const roomCell = document.createElement("td");
-            roomCell.textContent = event.roomName ? event.roomName : "No room";
-            roomCell.headers = "th-room";
+            const timeRow = document.createElement("div");
+            timeRow.className = "info-row";
+            timeRow.textContent = `🕒 ${start} - ${end}`;
+            card.appendChild(timeRow);
 
-            const registeredCell = document.createElement("td");
-            registeredCell.textContent = event.isRegistered ? '✅' : '❌';
-            registeredCell.headers = "th-registered";
+            const roomRow = document.createElement("div");
+            roomRow.className = "info-row";
+            roomRow.textContent = `🏠 ${event.roomName || "No room"}`;
+            card.appendChild(roomRow);
 
-            eventLine.appendChild(nameCell);
-            eventLine.appendChild(startCell);
-            eventLine.appendChild(endCell);
-            eventLine.appendChild(roomCell);
-            eventLine.appendChild(registeredCell);
-            eventTable.appendChild(eventLine);
+            const statusLink = document.createElement("a");
+            statusLink.className = "status";
+            statusLink.href = buildEventDetailUrl(event);
+            statusLink.target = "_blank";
+            statusLink.rel = "noopener noreferrer";
+            statusLink.textContent = event.isRegistered ? "Inscrit·e" : "Pas inscrit·e";
+            card.appendChild(statusLink);
+
+            eventGrid.appendChild(card);
         });
     }
-}
+    eventGrid.style.display = "block"
+
+    const gotoPanoBtnContainer = document.createElement("div");
+    gotoPanoBtnContainer.className = "more-button";
+
+    const goToPanoBtn = document.createElement("a");
+    goToPanoBtn.href = "https://panoramix.epitest.eu/calendar";
+    goToPanoBtn.target = "_blank";
+    goToPanoBtn.rel = "noopener noreferrer";
+    goToPanoBtn.textContent = "Aller sur Panoramix";
+
+    gotoPanoBtnContainer.appendChild(goToPanoBtn);
+    eventGrid.appendChild(gotoPanoBtnContainer);
+};
 
 const main = async () => {
     try {
         loadingIndicator.style.display = "block";
-        eventTable.style.display = "none";
+        eventGrid.style.display = "none";
         await getEvents();
     } catch (error) {
         console.error("Error fetching data");
