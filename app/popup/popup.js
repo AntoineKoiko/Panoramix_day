@@ -134,16 +134,17 @@ const buildEventDetailUrl = (event) => {
 };
 
 const displayEvents = (events) => {
+    const formatEvents = events.map(getEventData);
+    const eventsOfTheDay = filterEventOftheDay(formatEvents);
+    const sortedEvents = sortEventsByStart(eventsOfTheDay);
+
     eventGrid.innerHTML = "";
-    if (events.length === 0) {
+    if (sortedEvents.length === 0) {
         const noEventsItem = document.createElement("p");
-        noEventsItem.textContent = "No events for today.";
+        noEventsItem.textContent = "Pas d'événements pour aujourd'hui";
         noEventsItem.style.textAlign = "center";
         eventGrid.appendChild(noEventsItem);
     } else {
-        const formatEvents = events.map(getEventData);
-        const eventsOfTheDay = filterEventOftheDay(formatEvents);
-        const sortedEvents = sortEventsByStart(eventsOfTheDay);
 
         sortedEvents.forEach(event => {
             const now = new Date();
