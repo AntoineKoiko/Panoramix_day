@@ -1,8 +1,34 @@
-const authtentifyAndGetEvents = async () => {
+const storeValue = (key, value) => {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.set({ [key]: value }, () => {
+            if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError));
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
+const loadValue = (key) => {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(key, (result) => {
+            if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError));
+            } else {
+                resolve(result[key]);
+            }
+        });
+    }
+    );
+}
+
+const authentifyAndGetEvents = async () => {
     try {
         chrome.runtime.sendMessage({ type: "getToken" }, async (response) => {
             const authToken = response.jwt;
             await subMain(authToken)
+            storeValue("authToken", authToken)
         });
     } catch (error) {
         throw new Error("Failed to fetch data");
@@ -218,9 +244,10 @@ const main = async () => {
 
 
     try {
-        await authtentifyAndGetEvents();
+        const toekn = await loadValue("authToken");
+        await subMain(toekn);
     } catch (error) {
-        console.error("Error fetching data");
+        await authentifyAndGetEvents();
     } finally {
         loadingIndicator.style.display = "none";
     }

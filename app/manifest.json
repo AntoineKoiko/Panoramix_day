@@ -12,5 +12,8 @@
     ],
     "background": {
         "service_worker": "./scripts/background.js"
-    }
+    },
+    "permissions": [
+        "storage"
+    ]
 }
