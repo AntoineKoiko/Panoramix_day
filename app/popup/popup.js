@@ -1,15 +1,34 @@
-const getEvents = async () => {
+const storeValue = (key, value) => {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.set({ [key]: value }, () => {
+            if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError));
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
+const loadValue = (key) => {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(key, (result) => {
+            if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError));
+            } else {
+                resolve(result[key]);
+            }
+        });
+    }
+    );
+}
+
+const authentifyAndGetEvents = async () => {
     try {
         chrome.runtime.sendMessage({ type: "getToken" }, async (response) => {
             const authToken = response.jwt;
-            const events = await fethcEvents(authToken);
-            loadingIndicator.style.display = "none";
-
-            if (!events || events.length === 0) {
-                displayEvents([]);
-                return;
-            }
-            displayEvents(events);
+            await subMain(authToken)
+            storeValue("authToken", authToken)
         });
     } catch (error) {
         throw new Error("Failed to fetch data");
@@ -40,6 +59,7 @@ const getEndFetchString = () => {
     return end;
 }
 
+// retun a list of events or throw an error if the request fails
 const fethcEvents = async (token) => {
     const start = getStartFetchSting();
     const end = getEndFetchString();
@@ -57,6 +77,8 @@ const fethcEvents = async (token) => {
     const data = await res.json();
     return data;
 }
+
+// Events formatting
 
 const getEventData = (event) => {
     return {
@@ -192,27 +214,30 @@ const displayEvents = (events) => {
         });
     }
     eventGrid.style.display = "block"
-
-    const gotoPanoBtnContainer = document.createElement("div");
-    gotoPanoBtnContainer.className = "more-button";
-
-    const goToPanoBtn = document.createElement("a");
-    goToPanoBtn.href = "https://panoramix.epitest.eu/calendar";
-    goToPanoBtn.target = "_blank";
-    goToPanoBtn.rel = "noopener noreferrer";
-    goToPanoBtn.textContent = "Aller sur Panoramix";
-
-    gotoPanoBtnContainer.appendChild(goToPanoBtn);
-    eventGrid.appendChild(gotoPanoBtnContainer);
 };
 
+const subMain = async (token) => {
+    const events = await fethcEvents(token);
+
+    if (!events || events.length === 0) {
+        displayEvents([]);
+        return;
+    }
+    displayEvents(events);
+}
+
 const main = async () => {
+    loadingIndicator.style.display = "block";
+    eventGrid.style.display = "none";
+
+
     try {
-        loadingIndicator.style.display = "block";
-        eventGrid.style.display = "none";
-        await getEvents();
+        const toekn = await loadValue("authToken");
+        await subMain(toekn);
     } catch (error) {
-        console.error("Error fetching data");
+        await authentifyAndGetEvents();
+    } finally {
+        loadingIndicator.style.display = "none";
     }
 }
 
