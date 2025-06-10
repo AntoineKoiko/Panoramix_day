@@ -214,18 +214,6 @@ const displayEvents = (events) => {
         });
     }
     eventGrid.style.display = "block"
-
-    const gotoPanoBtnContainer = document.createElement("div");
-    gotoPanoBtnContainer.className = "more-button";
-
-    const goToPanoBtn = document.createElement("a");
-    goToPanoBtn.href = "https://panoramix.epitest.eu/calendar";
-    goToPanoBtn.target = "_blank";
-    goToPanoBtn.rel = "noopener noreferrer";
-    goToPanoBtn.textContent = "Aller sur Panoramix";
-
-    gotoPanoBtnContainer.appendChild(goToPanoBtn);
-    eventGrid.appendChild(gotoPanoBtnContainer);
 };
 
 const subMain = async (token) => {
