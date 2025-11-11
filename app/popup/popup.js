@@ -162,7 +162,6 @@ const displayEvents = (events) => {
         noEventsItem.style.textAlign = "center";
         eventGrid.appendChild(noEventsItem);
     } else {
-
         sortedEvents.forEach(event => {
             const now = new Date();
             const startDate = new Date(event.start);

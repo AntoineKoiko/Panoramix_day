@@ -6,7 +6,11 @@
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
-  <h2>Evenements du jour</h2>
+  <div class="header wrapper">
+    <button id="previous-day" aria-label="Jour précédent">&lt;</button>
+    <h2>Evenements du jour</h2>
+    <button id="next-day" aria-label="Jour suivant">&gt;</button>
+  </div>
   <div id="events" class="wrapper">
     <p id="loading-indicator">Chargement...</p>
     <div id="event-grid" class="event-grid"></div>
