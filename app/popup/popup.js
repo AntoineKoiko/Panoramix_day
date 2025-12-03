@@ -68,10 +68,9 @@ const getEventData = (event) => {
     };
 }
 
-const filterEventOftheDay = (events) => {
-    const today = new Date();
-    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+const filterEventsByDay = (events, day) => {
+    const startOfDay = new Date(day.getFullYear(), day.getMonth(), day.getDate());
+    const endOfDay = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1);
 
     return events.filter(event => {
         const eventStart = new Date(event.start);
@@ -129,7 +128,7 @@ const buildEventDetailUrl = (event) => {
 
 const displayEvents = (events) => {
     const formatEvents = events.map(getEventData);
-    const eventsOfTheDay = filterEventOftheDay(formatEvents);
+    const eventsOfTheDay = filterEventsByDay(formatEvents, new Date());
     const sortedEvents = sortEventsByStart(eventsOfTheDay);
 
     eventGrid.innerHTML = "";
