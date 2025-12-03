@@ -69,6 +69,7 @@ const getEventData = (event) => {
 }
 
 const filterEventsByDay = (events, day) => {
+    console.log("Filter events by day:", day, typeof day);
     const startOfDay = new Date(day.getFullYear(), day.getMonth(), day.getDate());
     const endOfDay = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1);
 
@@ -86,6 +87,26 @@ const sortEventsByStart = (events) => {
 
 const eventGrid = document.getElementById("event-grid");
 const loadingIndicator = document.getElementById("loading-indicator");
+const dateTitle = document.getElementById("date-title");
+const previousDayButton = document.getElementById("previous-day");
+const nextDayButton = document.getElementById("next-day");
+let diplayedDate = new Date();
+
+const changeDisplayedDate = (date) => {
+    diplayedDate = new Date(date);
+    dateTitle.textContent = diplayedDate.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    main();
+}
+
+previousDayButton.addEventListener("click", () => {
+    const prevDay = new Date(diplayedDate.getFullYear(), diplayedDate.getMonth(), diplayedDate.getDate() - 1);
+    changeDisplayedDate(prevDay);
+})
+
+nextDayButton.addEventListener("click", () => {
+    const nextDay = new Date(diplayedDate.getFullYear(), diplayedDate.getMonth(), diplayedDate.getDate() + 1);
+    changeDisplayedDate(nextDay);
+})
 
 const formatDate = (dataStr) => {
     const date = new Date(dataStr);
@@ -128,7 +149,7 @@ const buildEventDetailUrl = (event) => {
 
 const displayEvents = (events) => {
     const formatEvents = events.map(getEventData);
-    const eventsOfTheDay = filterEventsByDay(formatEvents, new Date());
+    const eventsOfTheDay = filterEventsByDay(formatEvents, diplayedDate);
     const sortedEvents = sortEventsByStart(eventsOfTheDay);
 
     eventGrid.innerHTML = "";
