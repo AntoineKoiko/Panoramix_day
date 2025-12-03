@@ -1,27 +1,4 @@
-const storeValue = (key, value) => {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.set({ [key]: value }, () => {
-            if (chrome.runtime.lastError) {
-                reject(new Error(chrome.runtime.lastError));
-            } else {
-                resolve();
-            }
-        });
-    });
-}
-
-const loadValue = (key) => {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.get(key, (result) => {
-            if (chrome.runtime.lastError) {
-                reject(new Error(chrome.runtime.lastError));
-            } else {
-                resolve(result[key]);
-            }
-        });
-    }
-    );
-}
+import { storeValue, loadValue } from "./utils.js";
 
 const authentifyAndGetEvents = async () => {
     try {
@@ -91,10 +68,10 @@ const getEventData = (event) => {
     };
 }
 
-const filterEventOftheDay = (events) => {
-    const today = new Date();
-    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+const filterEventsByDay = (events, day) => {
+    console.log("Filter events by day:", day, typeof day);
+    const startOfDay = new Date(day.getFullYear(), day.getMonth(), day.getDate());
+    const endOfDay = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1);
 
     return events.filter(event => {
         const eventStart = new Date(event.start);
@@ -110,6 +87,37 @@ const sortEventsByStart = (events) => {
 
 const eventGrid = document.getElementById("event-grid");
 const loadingIndicator = document.getElementById("loading-indicator");
+const dateTitle = document.getElementById("date-title");
+const previousDayButton = document.getElementById("previous-day");
+const nextDayButton = document.getElementById("next-day");
+let diplayedDate = new Date();
+
+const changeDisplayedDate = (date) => {
+    diplayedDate = new Date(date);
+
+    const today = new Date();
+    const isToday = diplayedDate.getFullYear() === today.getFullYear() &&
+        diplayedDate.getMonth() === today.getMonth() &&
+        diplayedDate.getDate() === today.getDate();
+
+    if (isToday) {
+        dateTitle.textContent = "Today";
+    } else {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateTitle.textContent = diplayedDate.toLocaleDateString('en-US', options);
+    }
+    main();
+}
+
+previousDayButton.addEventListener("click", () => {
+    const prevDay = new Date(diplayedDate.getFullYear(), diplayedDate.getMonth(), diplayedDate.getDate() - 1);
+    changeDisplayedDate(prevDay);
+})
+
+nextDayButton.addEventListener("click", () => {
+    const nextDay = new Date(diplayedDate.getFullYear(), diplayedDate.getMonth(), diplayedDate.getDate() + 1);
+    changeDisplayedDate(nextDay);
+})
 
 const formatDate = (dataStr) => {
     const date = new Date(dataStr);
@@ -152,7 +160,7 @@ const buildEventDetailUrl = (event) => {
 
 const displayEvents = (events) => {
     const formatEvents = events.map(getEventData);
-    const eventsOfTheDay = filterEventOftheDay(formatEvents);
+    const eventsOfTheDay = filterEventsByDay(formatEvents, diplayedDate);
     const sortedEvents = sortEventsByStart(eventsOfTheDay);
 
     eventGrid.innerHTML = "";
@@ -162,7 +170,6 @@ const displayEvents = (events) => {
         noEventsItem.style.textAlign = "center";
         eventGrid.appendChild(noEventsItem);
     } else {
-
         sortedEvents.forEach(event => {
             const now = new Date();
             const startDate = new Date(event.start);

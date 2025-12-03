@@ -6,7 +6,12 @@
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
-  <h2>Evenements du jour</h2>
+  <div class="header wrapper">
+    <button id="previous-day" aria-label="Jour précédent">&lt;</button>
+    <h2>Evenements</h2>
+    <button id="next-day" aria-label="Jour suivant">&gt;</button>
+  </div>
+  <h3 id="date-title">Today</h3>
   <div id="events" class="wrapper">
     <p id="loading-indicator">Chargement...</p>
     <div id="event-grid" class="event-grid"></div>
@@ -14,6 +19,6 @@
   <div class="more-button">
     <a href="https://panoramix.epitest.eu/calendar" target="_blank" rel="noopener noreferrer">Aller sur Panoramix</a>
   </div>
-  <script src="popup.js"></script>
+  <script type="module" src="popup.js"></script>
 </body>
 </html>
