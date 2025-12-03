@@ -94,7 +94,18 @@ let diplayedDate = new Date();
 
 const changeDisplayedDate = (date) => {
     diplayedDate = new Date(date);
-    dateTitle.textContent = diplayedDate.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    const today = new Date();
+    const isToday = diplayedDate.getFullYear() === today.getFullYear() &&
+        diplayedDate.getMonth() === today.getMonth() &&
+        diplayedDate.getDate() === today.getDate();
+
+    if (isToday) {
+        dateTitle.textContent = "Today";
+    } else {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateTitle.textContent = diplayedDate.toLocaleDateString('en-US', options);
+    }
     main();
 }
 
