@@ -217,6 +217,28 @@ const displayEvents = (events) => {
             statusLink.textContent = event.isRegistered ? "Inscrit·e" : "Pas inscrit·e";
             card.appendChild(statusLink);
 
+            const startISO = new Date(event.start).toISOString().replace(/[-:]/g, '').split('.')[0];
+            const endISO = new Date(event.end).toISOString().replace(/[-:]/g, '').split('.')[0];
+            const eventHours = `${start} - ${end}`;
+
+            const googleCalendarLink = document.createElement("a");
+            googleCalendarLink.className = "status";
+            googleCalendarLink.href = `https://calendar.google.com/calendar/r/eventedit?text=${encodeURIComponent(event.title)}&dates=${startISO}Z/${endISO}Z&location=${encodeURIComponent(event.roomName || '')}&details=${encodeURIComponent(eventHours)}`;
+            googleCalendarLink.target = "_blank";
+            googleCalendarLink.rel = "noopener noreferrer";
+            googleCalendarLink.textContent = "Add to Google Calendar";
+            card.appendChild(googleCalendarLink);
+
+            const outlookLink = document.createElement("a");
+            outlookLink.className = "status";
+            const outlookStartdt = new Date(event.start).toISOString().replace(/[-:]/g, ':').replace('Z', '-05:00');
+            const outlookEnddt = new Date(event.end).toISOString().replace(/[-:]/g, ':').replace('Z', '-05:00');
+            outlookLink.href = `https://outlook.office.com/owa/?path=/calendar/action/compose&rru=addevent&startdt=${encodeURIComponent(outlookStartdt)}&enddt=${encodeURIComponent(outlookEnddt)}&subject=${encodeURIComponent(event.title)}&location=${encodeURIComponent(event.roomName || '')}&body=${encodeURIComponent(eventHours)}`;
+            outlookLink.target = "_blank";
+            outlookLink.rel = "noopener noreferrer";
+            outlookLink.textContent = "Add to Outlook";
+            card.appendChild(outlookLink);
+
             eventGrid.appendChild(card);
         });
     }
@@ -236,7 +258,6 @@ const subMain = async (token) => {
 const main = async () => {
     loadingIndicator.style.display = "block";
     eventGrid.style.display = "none";
-
 
     try {
         const toekn = await loadValue("authToken");
